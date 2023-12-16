@@ -32,6 +32,14 @@ type UpdateBasketRequest struct {
 	State basketState `json:"state"`
 }
 
+type GetBasketResponse struct {
+	domain.Basket `json:"basket"`
+}
+
+type IndexBasketsResponse struct {
+	Baskets []domain.Basket `json:"baskets"`
+}
+
 type basketState string
 
 const (
