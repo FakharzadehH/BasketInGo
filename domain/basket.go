@@ -2,9 +2,9 @@ package domain
 
 type Basket struct {
 	BaseModel
-	Data   string      `json:"data,omitempty"`
-	State  BasketState `json:"state,omitempty"`
-	UserID uint        `json:"user_id,omitempty"`
+	Data   string      `json:"data"`
+	State  BasketState `json:"state"`
+	UserID uint        `json:"user_id"`
 }
 type BasketState string
 
