@@ -97,6 +97,7 @@ func (u *User) GetBasket(ctx context.Context, userID uint, basketID uint) (*payl
 	}, nil
 }
 func (u *User) UpdateBasket(ctx context.Context, userID uint, basketID uint, payload payloads.UpdateBasketRequest) (*payloads.GenericSuccessResponse, error) {
+
 	basket := domain.Basket{}
 	if err := u.repos.Basket.GetBasketByID(basketID, &basket); err != nil {
 		return nil, err
@@ -107,8 +108,15 @@ func (u *User) UpdateBasket(ctx context.Context, userID uint, basketID uint, pay
 	if basket.State == domain.BasketStateComplete {
 		return nil, errors.New("The basket state is complete and cannot be edited anymore.")
 	}
-	basket.Data = payload.Data
-	basket.State = payload.State
+	if payload.Data != "" {
+		basket.Data = payload.Data
+	}
+	if payload.State != "" {
+		if payload.State != domain.BasketStateComplete && payload.State != domain.BasketStatePending {
+			return nil, errors.New("invalid state")
+		}
+		basket.State = payload.State
+	}
 	if err := u.repos.Basket.Upsert(&basket); err != nil {
 		logger.Logger().Errorw("db error while updating basket", "err", err)
 		return nil, errors.New("error while updating basket")
@@ -134,11 +142,15 @@ func (u *User) DeleteBasket(ctx context.Context, userID uint, basketID uint) (*p
 	}, nil
 }
 func (u *User) CreateBasket(ctx context.Context, userID uint, payload payloads.CreateBasketRequest) (*payloads.CreateBasketResponse, error) {
+	if payload.Data == "" || (payload.State != domain.BasketStateComplete && payload.State != domain.BasketStatePending) {
+		return nil, errors.New("invalid data or state")
+	}
 	basket := domain.Basket{
 		Data:   payload.Data,
 		State:  payload.State,
 		UserID: userID,
 	}
+
 	if err := u.repos.Basket.Upsert(&basket); err != nil {
 		logger.Logger().Errorw("db error while creating basket", "err", err)
 		return nil, errors.New("error while creating basket")
