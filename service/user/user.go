@@ -7,6 +7,7 @@ import (
 	"github.com/FakharzadehH/BasketInGo/domain"
 	"github.com/FakharzadehH/BasketInGo/domain/payloads"
 	"github.com/FakharzadehH/BasketInGo/internal/helpers"
+	"github.com/FakharzadehH/BasketInGo/internal/logger"
 	"github.com/FakharzadehH/BasketInGo/internal/repository"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
@@ -74,6 +75,7 @@ func (u *User) Login(ctx context.Context, payload payloads.LoginRequest) (*paylo
 func (u *User) IndexBaskets(ctx context.Context, userID uint) (*payloads.IndexBasketsResponse, error) {
 	baskets, err := u.repos.Basket.GetByUserID(userID)
 	if err != nil {
+		logger.Logger().Errorw("db error while indexing baskets", "err", err)
 		return nil, err
 	}
 	return &payloads.IndexBasketsResponse{
@@ -84,6 +86,7 @@ func (u *User) IndexBaskets(ctx context.Context, userID uint) (*payloads.IndexBa
 func (u *User) GetBasket(ctx context.Context, userID uint, basketID uint) (*payloads.GetBasketResponse, error) {
 	basket := domain.Basket{}
 	if err := u.repos.Basket.GetBasketByID(basketID, &basket); err != nil {
+		logger.Logger().Errorw("db error while getting basket", "err", err)
 		return nil, err
 	}
 	if basket.UserID != userID {
@@ -94,8 +97,53 @@ func (u *User) GetBasket(ctx context.Context, userID uint, basketID uint) (*payl
 	}, nil
 }
 func (u *User) UpdateBasket(ctx context.Context, userID uint, basketID uint, payload payloads.UpdateBasketRequest) (*payloads.GenericSuccessResponse, error) {
+	basket := domain.Basket{}
+	if err := u.repos.Basket.GetBasketByID(basketID, &basket); err != nil {
+		return nil, err
+	}
+	if basket.UserID != userID {
+		return nil, errors.New("this basket belongs to another user")
+	}
+	if basket.State == domain.BasketStateComplete {
+		return nil, errors.New("The basket state is complete and cannot be edited anymore.")
+	}
+	basket.Data = payload.Data
+	basket.State = payload.State
+	if err := u.repos.Basket.Upsert(&basket); err != nil {
+		logger.Logger().Errorw("db error while updating basket", "err", err)
+		return nil, errors.New("error while updating basket")
+	}
+	return &payloads.GenericSuccessResponse{
+		Success: true,
+	}, nil
 }
 func (u *User) DeleteBasket(ctx context.Context, userID uint, basketID uint) (*payloads.GenericSuccessResponse, error) {
+	basket := domain.Basket{}
+	if err := u.repos.Basket.GetBasketByID(basketID, &basket); err != nil {
+		return nil, err
+	}
+	if basket.UserID != userID {
+		return nil, errors.New("this basket belongs to another user")
+	}
+	if err := u.repos.Basket.Delete(basketID); err != nil {
+		logger.Logger().Errorw("db error while deleting basket", "err", err)
+		return nil, errors.New("error while deleting basket")
+	}
+	return &payloads.GenericSuccessResponse{
+		Success: true,
+	}, nil
 }
-func (u *User) CreateBasket(ctx context.Context, payload payloads.CreateBasketRequest) (*payloads.CreateBasketResponse, error) {
+func (u *User) CreateBasket(ctx context.Context, userID uint, payload payloads.CreateBasketRequest) (*payloads.CreateBasketResponse, error) {
+	basket := domain.Basket{
+		Data:   payload.Data,
+		State:  payload.State,
+		UserID: userID,
+	}
+	if err := u.repos.Basket.Upsert(&basket); err != nil {
+		logger.Logger().Errorw("db error while creating basket", "err", err)
+		return nil, errors.New("error while creating basket")
+	}
+	return &payloads.CreateBasketResponse{
+		Basket: basket,
+	}, nil
 }
