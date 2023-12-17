@@ -2,5 +2,5 @@ package domain
 
 type User struct {
 	BaseModel
-	Email string `json:"email,omitempty"`
+	Username string `json:"email,omitempty"`
 }
