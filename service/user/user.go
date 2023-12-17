@@ -108,7 +108,7 @@ func (u *User) UpdateBasket(ctx context.Context, userID uint, basketID uint, pay
 	if basket.State == domain.BasketStateComplete {
 		return nil, errors.New("The basket state is complete and cannot be edited anymore.")
 	}
-	if payload.Data != "" {
+	if len(payload.Data) != 0 {
 		basket.Data = payload.Data
 	}
 	if payload.State != "" {
@@ -142,7 +142,7 @@ func (u *User) DeleteBasket(ctx context.Context, userID uint, basketID uint) (*p
 	}, nil
 }
 func (u *User) CreateBasket(ctx context.Context, userID uint, payload payloads.CreateBasketRequest) (*payloads.CreateBasketResponse, error) {
-	if payload.Data == "" || (payload.State != domain.BasketStateComplete && payload.State != domain.BasketStatePending) {
+	if len(payload.Data) == 0 || (payload.State != domain.BasketStateComplete && payload.State != domain.BasketStatePending) {
 		return nil, errors.New("invalid data or state")
 	}
 	basket := domain.Basket{
