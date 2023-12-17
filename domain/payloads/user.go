@@ -23,6 +23,9 @@ type CreateBasketRequest struct {
 	Data  string      `json:"data"`
 	State basketState `json:"state"`
 }
+type CreateBasketResponse struct {
+	domain.Basket `json:"basket"`
+}
 
 type UpdateBasketRequest struct {
 	Data  string      `json:"data"`
