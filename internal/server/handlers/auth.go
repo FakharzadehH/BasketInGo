@@ -43,7 +43,7 @@ func (h *Handlers) AuthLogin() echo.HandlerFunc {
 		}
 		res, err := h.svcs.User.Login(c.Request().Context(), req.LoginRequest)
 		if err != nil {
-			return err
+			return c.JSON(http.StatusBadRequest, err.Error())
 		}
 		return c.JSON(200, &response{
 			LoginResponse: *res,
