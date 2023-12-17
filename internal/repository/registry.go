@@ -22,6 +22,7 @@ type User interface {
 	GetByUsername(username string, user *domain.User) error
 	Insert(user *domain.User) error
 	SetPassword(id uint, password string) error
+	GetPassword(id uint) (string, error)
 }
 
 type Basket interface {

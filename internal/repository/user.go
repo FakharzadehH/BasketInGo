@@ -28,3 +28,14 @@ func (u *userRepository) Insert(user *domain.User) error {
 func (u *userRepository) SetPassword(id uint, password string) error {
 	return u.db.Model(&domain.User{}).Where("id = ?", id).Update("password", password).Error
 }
+func (u *userRepository) GetPassword(id uint) (string, error) {
+	user := struct {
+		Password string `gorm:"column:password"`
+		ID       uint   `gorm:"column:id"`
+	}{}
+	err := u.db.Model(&domain.User{}).Where("id = ?", id).First(&user).Error
+	if err != nil {
+		return "", err
+	}
+	return user.Password, nil
+}
