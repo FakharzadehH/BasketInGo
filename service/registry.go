@@ -1,6 +1,9 @@
 package service
 
 import (
+	"context"
+
+	"github.com/FakharzadehH/BasketInGo/domain/payloads"
 	"github.com/FakharzadehH/BasketInGo/internal/repository"
 	"github.com/FakharzadehH/BasketInGo/service/user"
 )
@@ -16,4 +19,6 @@ func NewServices(repos *repository.Repositories) *Services {
 }
 
 type User interface {
+	SignUp(ctx context.Context, payload payloads.SignUpRequest) (*payloads.GenericSuccessResponse, error)
+	Login(ctx context.Context, payload payloads.LoginRequest) (*payloads.LoginResponse, error)
 }
