@@ -20,16 +20,16 @@ type LoginResponse struct {
 }
 
 type CreateBasketRequest struct {
-	Data  string      `json:"data"`
-	State basketState `json:"state"`
+	Data  string             `json:"data"`
+	State domain.BasketState `json:"state"`
 }
 type CreateBasketResponse struct {
 	domain.Basket `json:"basket"`
 }
 
 type UpdateBasketRequest struct {
-	Data  string      `json:"data"`
-	State basketState `json:"state"`
+	Data  string             `json:"data"`
+	State domain.BasketState `json:"state"`
 }
 
 type GetBasketResponse struct {
@@ -39,10 +39,3 @@ type GetBasketResponse struct {
 type IndexBasketsResponse struct {
 	Baskets []domain.Basket `json:"baskets"`
 }
-
-type basketState string
-
-const (
-	basketStatePending  basketState = "PENDING"
-	basketStateComplete basketState = "COMPLETED"
-)

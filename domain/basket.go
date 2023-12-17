@@ -3,12 +3,12 @@ package domain
 type Basket struct {
 	BaseModel
 	Data   string      `json:"data,omitempty"`
-	State  basketState `json:"state,omitempty"`
+	State  BasketState `json:"state,omitempty"`
 	UserID uint        `json:"user_id,omitempty"`
 }
-type basketState string
+type BasketState string
 
 const (
-	basketStatePending  basketState = "PENDING"
-	basketStateComplete basketState = "COMPLETED"
+	basketStatePending  BasketState = "PENDING"
+	basketStateComplete BasketState = "COMPLETED"
 )
