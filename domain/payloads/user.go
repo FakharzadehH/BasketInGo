@@ -20,16 +20,16 @@ type LoginResponse struct {
 }
 
 type CreateBasketRequest struct {
-	Data  string             `json:"data"`
-	State domain.BasketState `json:"state"`
+	Data  map[string]interface{} `json:"data"`
+	State domain.BasketState     `json:"state"`
 }
 type CreateBasketResponse struct {
 	domain.Basket `json:"basket"`
 }
 
 type UpdateBasketRequest struct {
-	Data  string             `json:"data"`
-	State domain.BasketState `json:"state"`
+	Data  map[string]interface{} `json:"data"`
+	State domain.BasketState     `json:"state"`
 }
 
 type GetBasketResponse struct {
