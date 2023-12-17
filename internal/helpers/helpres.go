@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"errors"
+	"time"
 
 	"github.com/FakharzadehH/BasketInGo/internal/config"
 	"github.com/golang-jwt/jwt/v5"
@@ -9,7 +10,8 @@ import (
 
 type UserClaim struct {
 	jwt.RegisteredClaims
-	ID uint
+	ID     uint
+	Expiry time.Time
 }
 
 func GenerateJWT(user_id uint) (string, error) {
@@ -17,6 +19,7 @@ func GenerateJWT(user_id uint) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, UserClaim{
 		RegisteredClaims: jwt.RegisteredClaims{},
 		ID:               user_id,
+		Expiry:           time.Now().Add(1 * time.Hour),
 	})
 	s, err := token.SignedString([]byte(key))
 	if err != nil {

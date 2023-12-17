@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"strings"
+	"time"
 
 	"github.com/FakharzadehH/BasketInGo/domain"
 	"github.com/FakharzadehH/BasketInGo/internal/helpers"
@@ -20,10 +21,13 @@ func (m *Middlewares) Auth() echo.MiddlewareFunc {
 			if err != nil {
 				return echo.NewHTTPError(401, "Unauthorized, failed to parse token")
 			}
+			if claims.Expiry.Before(time.Now()) {
+				return echo.NewHTTPError(401, "Unauthorized, token expired")
+			}
 
 			user := domain.User{}
 			if err := m.repos.User.GetByID(claims.ID, &user); err != nil {
-				return echo.NewHTTPError(401, "Unauthorize, failed to get user")
+				return echo.NewHTTPError(401, "Unauthorized, failed to get user")
 			}
 			c.Set("user", &user)
 			return next(c)
