@@ -2,7 +2,7 @@ CREATE TABLE
     users(
         id int NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
         username TEXT NOT NULL,
-        password TEXT NOT NULL,
+        password TEXT,
         created_at DATE DEFAULT NOW(),
         updated_at DATE DEFAULT NOW()
     );
