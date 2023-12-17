@@ -1,8 +1,6 @@
 package payloads
 
 import (
-	"time"
-
 	"github.com/FakharzadehH/BasketInGo/domain"
 )
 
@@ -17,9 +15,8 @@ type LoginRequest struct {
 }
 
 type LoginResponse struct {
-	Token     string      `json:"token"`
-	ExpiresAt *time.Time  `json:"expires_at"`
-	User      domain.User `json:"user"`
+	Token string      `json:"token"`
+	User  domain.User `json:"user"`
 }
 
 type CreateBasketRequest struct {
