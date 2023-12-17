@@ -69,5 +69,33 @@ func (u *User) Login(ctx context.Context, payload payloads.LoginRequest) (*paylo
 		Token: token,
 		User:  user,
 	}, nil
+}
 
+func (u *User) IndexBaskets(ctx context.Context, userID uint) (*payloads.IndexBasketsResponse, error) {
+	baskets, err := u.repos.Basket.GetByUserID(userID)
+	if err != nil {
+		return nil, err
+	}
+	return &payloads.IndexBasketsResponse{
+		Baskets: baskets,
+	}, nil
+}
+
+func (u *User) GetBasket(ctx context.Context, userID uint, basketID uint) (*payloads.GetBasketResponse, error) {
+	basket := domain.Basket{}
+	if err := u.repos.Basket.GetBasketByID(basketID, &basket); err != nil {
+		return nil, err
+	}
+	if basket.UserID != userID {
+		return nil, errors.New("this basket belongs to another user")
+	}
+	return &payloads.GetBasketResponse{
+		Basket: basket,
+	}, nil
+}
+func (u *User) UpdateBasket(ctx context.Context, userID uint, basketID uint, payload payloads.UpdateBasketRequest) (*payloads.GenericSuccessResponse, error) {
+}
+func (u *User) DeleteBasket(ctx context.Context, userID uint, basketID uint) (*payloads.GenericSuccessResponse, error) {
+}
+func (u *User) CreateBasket(ctx context.Context, payload payloads.CreateBasketRequest) (*payloads.CreateBasketResponse, error) {
 }
