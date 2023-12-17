@@ -24,3 +24,7 @@ func (u *userRepository) GetByUsername(username string, user *domain.User) error
 func (u *userRepository) Insert(user *domain.User) error {
 	return u.db.Create(user).Error
 }
+
+func (u *userRepository) SetPassword(id uint, password string) error {
+	return u.db.Model(&domain.User{}).Where("id = ?", id).Update("password", password).Error
+}
