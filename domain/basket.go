@@ -9,6 +9,6 @@ type Basket struct {
 type BasketState string
 
 const (
-	basketStatePending  BasketState = "PENDING"
-	basketStateComplete BasketState = "COMPLETED"
+	BasketStatePending  BasketState = "PENDING"
+	BasketStateComplete BasketState = "COMPLETED"
 )
