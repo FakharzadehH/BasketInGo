@@ -1,6 +1,9 @@
 package repository
 
-import "gorm.io/gorm"
+import (
+	"github.com/FakharzadehH/BasketInGo/domain"
+	"gorm.io/gorm"
+)
 
 type Repositories struct {
 	User   User
@@ -15,6 +18,15 @@ func NewRepositories(db *gorm.DB) *Repositories {
 }
 
 type User interface {
+	GetByID(id uint, user *domain.User) error
+	GetByUsername(username string, user *domain.User) error
+	Insert(user *domain.User) error
+	SetPassword(id uint, password string) error
 }
 
-type Basket interface{}
+type Basket interface {
+	GetBasketByID(id uint, basket *domain.Basket) error
+	GetByUserID(user_id uint) ([]domain.Basket, error)
+	Upsert(basket *domain.Basket) error
+	Delete(id uint) error
+}
