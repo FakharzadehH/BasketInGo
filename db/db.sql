@@ -10,7 +10,7 @@ CREATE TABLE
 CREATE TABLE
     baskets(
         id int NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-        data VARCHAR(2048) NOT NULL,
+        data JSONB NOT NULL,
         user_id int NOT NULL,
         state TEXT not null,
         created_at DATE DEFAULT NOW(),
