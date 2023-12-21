@@ -1,0 +1,8 @@
+DB:
+  HOST: 
+  PORT: 
+  USERNAME: 
+  PASSWORD: 
+  DB_NAME: 
+  SSL_MODE: 
+JWT_SECRET: 
