@@ -1,8 +1,8 @@
 DB:
-  HOST: 
+  HOST:
   PORT: 
   USERNAME: 
   PASSWORD: 
   DB_NAME: 
-  SSL_MODE: 
-JWT_SECRET: 
+  SSL_MODE: #set it to disable if you dont use ssl.
+JWT_SECRET: #random string. it's better to use a good and strong secret, containing both numbers and characters
