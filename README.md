@@ -6,7 +6,7 @@ A mini shopping cart API written with Echo framework. It utilizes user authentic
 - PostgreSQL
 
 # Installation 
-**Please Read the config.example.yaml file first, then write your own config.yaml according to it**
+**Please Read the config.example.yaml file first, then write your own config.yaml according to it.**
 run the project using command below:
 ```
 go run main.go
